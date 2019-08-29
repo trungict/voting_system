@@ -94,7 +94,7 @@ You can now login to administrator:
 OR user
 
     username: trunglb@voting.example
-    password: user
+    password: 123456
 
 -----
 <a name="feature3"></a>
