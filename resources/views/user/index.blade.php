@@ -47,6 +47,9 @@
                             @endforelse
                             </tbody>
                         </table>
+                        <div class="float-right">
+                            {{ $users->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

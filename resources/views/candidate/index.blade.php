@@ -64,6 +64,9 @@
                                             @endforelse
                                             </tbody>
                                         </table>
+                                        <div class="float-right">
+                                            {{ $candidates->links() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
