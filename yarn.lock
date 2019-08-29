@@ -1770,7 +1770,7 @@ cssnano-preset-default@^4.0.7:
     postcss-minify-selectors "^4.0.2"
     postcss-normalize-charset "^4.0.1"
     postcss-normalize-display-values "^4.0.2"
-    postcss-normalize-positions "^4.0.2"
+    postcss-normalize-position "^4.0.2"
     postcss-normalize-repeat-style "^4.0.2"
     postcss-normalize-string "^4.0.2"
     postcss-normalize-timing-functions "^4.0.2"
@@ -4325,7 +4325,7 @@ postcss-normalize-display-values@^4.0.2:
 
 postcss-normalize-positions@^4.0.2:
   version "4.0.2"
-  resolved "https://registry.yarnpkg.com/postcss-normalize-positions/-/postcss-normalize-positions-4.0.2.tgz#05f757f84f260437378368a91f8932d4b102917f"
+  resolved "https://registry.yarnpkg.com/postcss-normalize-position/-/postcss-normalize-position-4.0.2.tgz#05f757f84f260437378368a91f8932d4b102917f"
   dependencies:
     cssnano-util-get-arguments "^4.0.0"
     has "^1.0.0"

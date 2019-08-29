@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidate;
+use App\Models\Position;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -19,10 +22,24 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('home');
+        $user = Auth::user();
+
+        if ($user->isAdmin()) {
+            return view('home');
+        }
+
+        $positions = Position::all();
+        $candidates = $request->position_id ? Candidate::where('position_id', $request->position_id)->get() : collect();
+        return view('candidate.poll', compact('positions', 'request', 'candidates'));
+    }
+
+    public function profile()
+    {
+        return view('user.profile');
     }
 }

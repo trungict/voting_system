@@ -7,10 +7,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title')</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="https://kit.fontawesome.com/050d6c4fab.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -18,12 +19,14 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
+    @yield('css-section')
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -31,11 +34,42 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
+                    @if (!request()->is(['login', 'register']))
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item {{ request()->is('home') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('home') }}">
+                                    @if (Auth::user()->isAdmin())
+                                        <i class="fas fa-home"></i> Home
+                                    @else
+                                        <i class="fas fa-poll"></i> Current poll
+                                    @endif
+                                </a>
+                            </li>
+                            @if (Auth::user()->isAdmin())
+                            <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('users.index') }}">
+                                    <i class="fas fa-user"></i> Manage user
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('positions*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('positions.index') }}">
+                                    <i class="fas fa-user"></i> Manage positions
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('candidates*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('candidates.index') }}">
+                                    <i class="fas fa-user"></i> Manage candidate
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request()->is('poll-result') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('poll-result') }}">
+                                    <i class="fas fa-poll"></i> Poll result
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                    @endif
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -55,10 +89,13 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('profile') }}">
+                                        <i class="fas fa-user"></i> {{ __('Profile') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -71,10 +108,42 @@
                 </div>
             </div>
         </nav>
-
         <main class="py-4">
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/toastr.min.js') }}"></script>
+    <script>
+        toastr.options = {
+            "closeButton": true,
+            "newestOnTop": true,
+            "showDuration": 300,
+            "hideDuration": 1000,
+            "timeOut": 5000,
+            "extendedTimeOut": 1000,
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "autoDismiss": true
+        };
+
+        @if(session('message'))
+            toastr.{{ session('alert-type') }}('{{ session('message') }}');
+        @endif
+
+        @if ($errors->any())
+            @foreach($errors->all() as $message)
+                toastr.error('{{ $message }}');
+            @endforeach
+        @endif
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+    @yield('js-section')
 </body>
 </html>

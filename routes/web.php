@@ -13,8 +13,19 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('guest');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('home', 'HomeController@index')->name('home');
+    Route::get('profile', 'UserController@profile')->name('profile');
+    Route::post('submit-poll', 'CandidateController@submitPoll')->name('submit-poll');
+
+    Route::middleware('admin')->group(function () {
+        Route::resource('users', 'UserController');
+        Route::resource('positions', 'PositionController');
+        Route::resource('candidates', 'CandidateController');
+        Route::get('poll-result', 'CandidateController@pollResult')->name('poll-result');
+    });
+});
